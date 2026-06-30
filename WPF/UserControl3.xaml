@@ -1,0 +1,546 @@
+﻿<UserControl x:Class="WpfApp3.UserControl3"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:WpfApp3"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             mc:Ignorable="d"
+             d:DesignHeight="1080" d:DesignWidth="1920"
+             Focusable="True">
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="AudioFilesViewSource" Source="{Binding}">
+            <CollectionViewSource.SortDescriptions>
+                <componentModel:SortDescription PropertyName="FileName" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="GroupKey"/>
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+
+        <Style x:Key="SquarePlayerButton" TargetType="Button">
+            <Setter Property="Width" Value="42"/>
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource GlassWhite}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource GlassWhiteBold}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AccentButton" TargetType="Button">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Background" Value="{DynamicResource Accent}"/>
+            <Setter Property="Foreground" Value="{DynamicResource White}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="24"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource AccentLight}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource AccentDark}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModeToggleButton" TargetType="Button">
+            <Setter Property="Width" Value="42"/>
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="ToolTip" Value="顺序循环"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource GlassWhite}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource GlassWhiteBold}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SeekSlider" TargetType="Slider">
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Minimum" Value="0"/>
+            <Setter Property="Maximum" Value="100"/>
+            <Setter Property="Value" Value="0"/>
+            <Setter Property="IsMoveToPointEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid>
+                            <Track x:Name="PART_Track">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton>
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Height="4" CornerRadius="2"
+                                                        Background="{DynamicResource Accent}"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton>
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Height="4" CornerRadius="2"
+                                                        Background="{DynamicResource BorderColor}"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Width="14" Height="14"
+                                           Cursor="Hand">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Ellipse Width="14" Height="14"
+                                                         Fill="{DynamicResource Accent}"
+                                                         Stroke="{DynamicResource White}"
+                                                         StrokeThickness="2"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="VolumeSlider" TargetType="Slider">
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Minimum" Value="0"/>
+            <Setter Property="Maximum" Value="1"/>
+            <Setter Property="SmallChange" Value="0.05"/>
+            <Setter Property="LargeChange" Value="0.1"/>
+            <Setter Property="Value" Value="0"/>
+            <Setter Property="IsMoveToPointEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid>
+                            <Track x:Name="PART_Track">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton>
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Height="3" CornerRadius="1.5"
+                                                        Background="{DynamicResource Accent}"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton>
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Height="3" CornerRadius="1.5"
+                                                        Background="{DynamicResource BorderColor}"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Width="12" Height="12"
+                                           Cursor="Hand">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Ellipse Width="12" Height="12"
+                                                         Fill="{DynamicResource Accent}"
+                                                         Stroke="{DynamicResource White}"
+                                                         StrokeThickness="2"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="AudioFileItemTemplate">
+            <Grid Height="36" Background="Transparent">
+                <TextBlock Text="{Binding DisplayName}"
+                           Foreground="{DynamicResource TextPrimary}"
+                           FontSize="13"
+                           VerticalAlignment="Center"
+                           Margin="12,0"/>
+            </Grid>
+        </DataTemplate>
+
+        <Style x:Key="AudioFileListBoxStyle" TargetType="ListBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="ItemTemplate" Value="{DynamicResource AudioFileItemTemplate}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border x:Name="itemBorder"
+                                            Background="{TemplateBinding Background}"
+                                            BorderThickness="0"
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter HorizontalAlignment="Stretch"
+                                                          VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="itemBorder" Property="Background" Value="{DynamicResource BgHover}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="itemBorder" Property="Background" Value="{DynamicResource Accent}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource BgDark}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="6*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="{DynamicResource BgPanel}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBox x:Name="SearchBox"
+                         Grid.Row="0"
+                         Height="36"
+                         Margin="12,12,12,0"
+                         Padding="10,0"
+                         Background="{DynamicResource BgSurface}"
+                         Foreground="{DynamicResource TextPrimary}"
+                         CaretBrush="{DynamicResource TextPrimary}"
+                         BorderThickness="0"
+                         FontSize="13"
+                         TextChanged="OnSearchTextChanged"
+                         Tag="搜索音乐...">
+                    <TextBox.Resources>
+                        <VisualBrush x:Key="PlaceholderBrush" Stretch="None" AlignmentX="Left">
+                            <VisualBrush.Visual>
+                                <TextBlock Text="🔍 搜索音乐..."
+                                           Foreground="{DynamicResource TextMuted}"
+                                           FontSize="13"/>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </TextBox.Resources>
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TextBox">
+                                        <Border x:Name="border"
+                                                Background="{TemplateBinding Background}"
+                                                CornerRadius="8"
+                                                BorderThickness="0">
+                                            <Grid>
+                                                <ScrollViewer x:Name="PART_ContentHost"
+                                                              VerticalAlignment="Center"/>
+                                                <TextBlock x:Name="placeholderText"
+                                                           Text="🔍 搜索音乐..."
+                                                           Foreground="{DynamicResource TextMuted}"
+                                                           FontSize="13"
+                                                           VerticalAlignment="Center"
+                                                           Margin="10,0,0,0"
+                                                           IsHitTestVisible="False"
+                                                           Visibility="Collapsed"/>
+                                            </Grid>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter TargetName="placeholderText" Property="Visibility" Value="Visible"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <ListBox x:Name="FileListBox"
+                         Grid.Row="1"
+                         Margin="4,0,4,4"
+                         Style="{DynamicResource AudioFileListBoxStyle}"
+                         MouseDoubleClick="OnFileListDoubleClick">
+                    <ListBox.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border Background="{DynamicResource BgSurface}"
+                                            Padding="12,4"
+                                            Margin="0,4,0,2"
+                                            CornerRadius="6">
+                                        <TextBlock Text="{Binding Name}"
+                                                   Foreground="{DynamicResource Accent}"
+                                                   FontSize="12"
+                                                   FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListBox.GroupStyle>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <GridSplitter Grid.Column="1"
+                      Width="5"
+                      HorizontalAlignment="Stretch"
+                      Background="{DynamicResource BorderColor}"
+                      ResizeBehavior="PreviousAndNext"/>
+
+        <Border Grid.Column="2" Background="{DynamicResource BgDark}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0"
+                        Background="{DynamicResource BgPanel}"
+                        Padding="20,12"
+                        BorderBrush="{DynamicResource BorderColor}"
+                        BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="BtnCloseTrack"
+                                Width="28" Height="28"
+                                Background="Transparent"
+                                Foreground="{DynamicResource TextSecondary}"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                FontSize="16"
+                                Content="✕"
+                                ToolTip="关闭当前音乐"
+                                VerticalAlignment="Center"
+                                Margin="0,0,10,0"
+                                Click="OnCloseTrackClick">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="bd"
+                                            Background="{TemplateBinding Background}"
+                                            CornerRadius="6">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource GlassWhite}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                        <TextBlock x:Name="TxtFileInfo"
+                                   Text="未选择音频文件"
+                                   Foreground="{DynamicResource TextSecondary}"
+                                   FontSize="14"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Viewbox Grid.Row="1"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             MaxWidth="800"
+                             MaxHeight="200"
+                             Stretch="Uniform">
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <TextBlock x:Name="TxtCurrentSong"
+                                       Text="🎵"
+                                       Foreground="{DynamicResource TextMuted}"
+                                       FontSize="48"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock x:Name="TxtCurrentArtist"
+                                       Text=""
+                                       Foreground="{DynamicResource TextSecondary}"
+                                       FontSize="20"
+                                       HorizontalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Margin="0,12,0,0"/>
+                        </StackPanel>
+                    </Viewbox>
+                </Grid>
+
+                <Grid Grid.Row="2"
+                      Margin="40,8,40,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="TxtCurrentTime"
+                               Grid.Column="0"
+                               Text="00:00"
+                               Foreground="{DynamicResource TextMuted}"
+                               FontSize="12"
+                               VerticalAlignment="Center"
+                               Width="44"
+                               TextAlignment="Right"
+                               Margin="0,0,10,0"/>
+
+                    <Slider x:Name="ProgressSlider"
+                            Grid.Column="1"
+                            Style="{DynamicResource SeekSlider}"
+                            ValueChanged="OnProgressSliderValueChanged"
+                            Thumb.DragStarted="OnProgressDragStarted"
+                            Thumb.DragCompleted="OnProgressDragCompleted"
+                            IsMoveToPointEnabled="False"
+                            VerticalAlignment="Center"/>
+
+                    <TextBlock x:Name="TxtTotalTime"
+                               Grid.Column="2"
+                               Text="00:00"
+                               Foreground="{DynamicResource TextMuted}"
+                               FontSize="12"
+                               VerticalAlignment="Center"
+                               Width="44"
+                               TextAlignment="Left"
+                               Margin="10,0,0,0"/>
+                </Grid>
+
+                <Border Grid.Row="3"
+                        Background="{DynamicResource BgPanel}"
+                        Padding="20,10"
+                        BorderBrush="{DynamicResource BorderColor}"
+                        BorderThickness="0,1,0,0">
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <Button x:Name="BtnLoopMode"
+                                Content="🔁"
+                                Style="{DynamicResource ModeToggleButton}"
+                                Click="OnLoopModeClick"
+                                ToolTip="顺序循环"
+                                Margin="0,0,4,0"/>
+
+                        <Button x:Name="BtnPrev"
+                                Content="⏮"
+                                Style="{DynamicResource SquarePlayerButton}"
+                                Click="OnPrevClick"
+                                Margin="4,0,4,0"/>
+
+                        <Button x:Name="BtnPlayPause"
+                                Content="▶"
+                                Style="{DynamicResource AccentButton}"
+                                Click="OnPlayPauseClick"
+                                Margin="8,0"/>
+
+                        <Button x:Name="BtnNext"
+                                Content="⏭"
+                                Style="{DynamicResource SquarePlayerButton}"
+                                Click="OnNextClick"
+                                Margin="4,0,0,0"/>
+
+                        <Border Width="1"
+                                Background="{DynamicResource BorderColor}"
+                                Margin="16,6"/>
+
+                        <TextBlock x:Name="VolumeIconLabel"
+                                   Text="🔊"
+                                   Foreground="{DynamicResource TextSecondary}"
+                                   FontSize="14"
+                                   VerticalAlignment="Center"
+                                   Margin="16,0,6,0"/>
+                        <Slider x:Name="VolumeSlider"
+                                Style="{DynamicResource VolumeSlider}"
+                                ValueChanged="OnVolumeChanged"
+                                VerticalAlignment="Center"
+                                Margin="0,0,6,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

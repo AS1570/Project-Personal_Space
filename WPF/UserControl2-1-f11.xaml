@@ -1,0 +1,128 @@
+<UserControl x:Class="WpfApp3.UserControl2_1_f11"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Black">
+    <UserControl.Resources>
+        <Style x:Key="F11ToolbarButton" TargetType="Button">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource GlassWhite}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid x:Name="FullscreenRoot">
+        <ScrollViewer x:Name="ImageScrollViewer"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Hidden"
+                      CanContentScroll="False">
+            <Image x:Name="ImageViewer"
+                   Stretch="Uniform">
+                <Image.LayoutTransform>
+                    <RotateTransform x:Name="ImageRotateTransform"
+                                     Angle="0"/>
+                </Image.LayoutTransform>
+            </Image>
+        </ScrollViewer>
+
+        <Border x:Name="TopInfoBar"
+                Background="{DynamicResource BgDeep}"
+                VerticalAlignment="Top"
+                Padding="12,8"
+                Opacity="0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="FileNameLabel"
+                           Text="--"
+                           Foreground="{DynamicResource TextPrimary}"
+                           FontSize="13"
+                           FontWeight="SemiBold"/>
+                <TextBlock x:Name="DimensionsLabel"
+                           Text="-- × --"
+                           Foreground="{DynamicResource TextSecondary}"
+                           FontSize="12"
+                           Margin="16,0,0,0"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="BottomToolbar"
+                Background="{DynamicResource BgDeep}"
+                VerticalAlignment="Bottom"
+                Padding="12,8"
+                Opacity="0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="BtnRotateLeft"
+                        Style="{DynamicResource F11ToolbarButton}"
+                        ToolTip="向左旋转90°">
+                    <TextBlock Text="↺"/>
+                </Button>
+                <Button x:Name="BtnRotateRight"
+                        Style="{DynamicResource F11ToolbarButton}"
+                        ToolTip="向右旋转90°">
+                    <TextBlock Text="↻"/>
+                </Button>
+                <Separator Width="1"
+                           Background="{DynamicResource GlassWhite44}"
+                           Margin="8,6"/>
+                <Button x:Name="BtnZoomOut"
+                        Style="{DynamicResource F11ToolbarButton}"
+                        ToolTip="缩小">
+                    <TextBlock Text="−"/>
+                </Button>
+                <TextBlock x:Name="ZoomPercentLabel"
+                           Text="100%"
+                           Foreground="{DynamicResource TextSecondary}"
+                           FontSize="12"
+                           VerticalAlignment="Center"
+                           Width="44"
+                           TextAlignment="Center"/>
+                <Button x:Name="BtnZoomIn"
+                        Style="{DynamicResource F11ToolbarButton}"
+                        ToolTip="放大">
+                    <TextBlock Text="+"/>
+                </Button>
+                <Separator Width="1"
+                           Background="{DynamicResource GlassWhite44}"
+                           Margin="8,6"/>
+                <Button x:Name="BtnFitToWindow"
+                        Style="{DynamicResource F11ToolbarButton}"
+                        ToolTip="适应窗口">
+                    <TextBlock Text="⊞"/>
+                </Button>
+                <Button x:Name="BtnZoom100"
+                        Style="{DynamicResource F11ToolbarButton}"
+                        ToolTip="100%原始大小">
+                    <TextBlock Text="1:1"/>
+                </Button>
+                <Separator Width="1"
+                           Background="{DynamicResource GlassWhite44}"
+                           Margin="8,6"/>
+                <Button x:Name="BtnExitFullscreen"
+                        Style="{DynamicResource F11ToolbarButton}"
+                        ToolTip="退出全屏">
+                    <TextBlock Text="✕"/>
+                </Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

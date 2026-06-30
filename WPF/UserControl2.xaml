@@ -1,0 +1,166 @@
+﻿<UserControl x:Class="WpfApp3.UserControl2"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:WpfApp3"
+             mc:Ignorable="d"
+             d:DesignHeight="1080" d:DesignWidth="1920"
+             Focusable="True">
+    <UserControl.Resources>
+        <Style x:Key="ToggleFilterButton" TargetType="ToggleButton">
+            <Setter Property="MinWidth" Value="72"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Background" Value="{DynamicResource BgSurface}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextMuted}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="8,4"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentLight}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource White}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource BgHover}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="IconButton" TargetType="Button">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource BgHover}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource BgDark}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="LeftColumn" Width="4*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition x:Name="RightColumn" Width="6*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="{DynamicResource BgPanel}">
+            <Grid Margin="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,8">
+                    <TextBox x:Name="SearchBox"
+                             Height="34"
+                             Background="{DynamicResource BgSurface}"
+                             Foreground="{DynamicResource TextPrimary}"
+                             BorderBrush="{DynamicResource BorderColor}"
+                             BorderThickness="1"
+                             CaretBrush="{DynamicResource TextPrimary}"
+                             VerticalContentAlignment="Center"
+                             Padding="10,0"
+                             FontSize="13"
+                             TextChanged="OnSearchTextChanged"
+                             Margin="0,0,44,0">
+                        <TextBox.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                    <Button x:Name="BtnToggleRightPanel"
+                            Style="{DynamicResource IconButton}"
+                            ToolTip="隐藏右侧面板"
+                            HorizontalAlignment="Right"
+                            Click="OnToggleRightPanelClick">
+                        <TextBlock Text="▶"/>
+                    </Button>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <ToggleButton x:Name="BtnFilterAll"
+                                      Content="全部"
+                                      Style="{DynamicResource ToggleFilterButton}"
+                                      IsChecked="True"
+                                      Click="OnFilterChanged"/>
+                        <ToggleButton x:Name="BtnFilterImage"
+                                      Content="照片"
+                                      Style="{DynamicResource ToggleFilterButton}"
+                                      Margin="4,0,0,0"
+                                      Click="OnFilterChanged"/>
+                        <ToggleButton x:Name="BtnFilterVideo"
+                                      Content="视频"
+                                      Style="{DynamicResource ToggleFilterButton}"
+                                      Margin="4,0,0,0"
+                                      Click="OnFilterChanged"/>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock x:Name="ResultCountLabel"
+                           Grid.Row="2"
+                           Text="共 0 个文件"
+                           Foreground="{DynamicResource TextMuted}"
+                           FontSize="12"
+                           Margin="0,0,0,8"/>
+
+                <ScrollViewer Grid.Row="3"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <WrapPanel x:Name="ThumbnailPanel" Margin="0,0,0,0"/>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <GridSplitter x:Name="SplitterBar"
+                      Grid.Column="1"
+                      Width="5"
+                      HorizontalAlignment="Stretch"
+                      Background="{DynamicResource BorderColor}"
+                      ResizeBehavior="PreviousAndNext"
+                      ResizeDirection="Columns"/>
+
+        <Border x:Name="RightPanelBorder" Grid.Column="2" Background="{DynamicResource BgDark}">
+            <ContentControl x:Name="RightPanelHost"/>
+        </Border>
+    </Grid>
+</UserControl>
